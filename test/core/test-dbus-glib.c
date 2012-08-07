@@ -1,3 +1,29 @@
+/* General tests for dbus-glib. Please make new tests into a standalone
+ * binary using GTest instead, where feasible.
+ *
+ * Copyright © 2006-2010 Red Hat, Inc.
+ * Copyright © 2006-2010 Collabora Ltd.
+ * Copyright © 2006-2011 Nokia Corporation
+ * Copyright © 2006 Steve Frécinaux
+ *
+ * Licensed under the Academic Free License version 2.1
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
+
 #include <config.h>
 
 /* -*- mode: C; c-file-style: "gnu" -*- */
@@ -297,6 +323,8 @@ test_base_class_get_all (DBusGConnection *connection,
   GError *error = NULL;
   GHashTable *hash = NULL;
 
+  /* g_test_bug (19145); */
+
   g_assert (expected_string_value != NULL);
   g_assert (object_path != NULL);
 
@@ -385,6 +413,8 @@ test_subclass_get_all (DBusGConnection *connection,
   DBusGProxy *proxy;
   GError *error = NULL;
   GHashTable *hash = NULL;
+
+  /* g_test_bug (19145); */
 
   g_assert (object_path != NULL);
 
@@ -786,27 +816,6 @@ main (int argc, char **argv)
   g_print ("ThrowError failed (as expected) returned error: %s\n", error->message);
   g_clear_error (&error);
 
-  g_print ("Calling ThrowNotSupported\n");
-  if (dbus_g_proxy_call (proxy, "ThrowNotSupported", &error,
-			 G_TYPE_INVALID, G_TYPE_INVALID) != FALSE)
-    lose ("ThrowNotSupported call unexpectedly succeeded!");
-
-  if (error->domain != DBUS_GERROR || error->code != DBUS_GERROR_NOT_SUPPORTED)
-    lose ("ThrowNotSupported call returned unexpected error: %s #%u: %s %s",
-          g_quark_to_string (error->domain), error->code,
-          dbus_g_error_get_name (error), error->message);
-
-  g_print ("ThrowNotSupported correctly returned error: %s\n", error->message);
-  g_clear_error (&error);
-
-  g_print ("Calling ThrowUnregisteredError\n");
-  if (dbus_g_proxy_call (proxy, "ThrowUnregisteredError", &error,
-			 G_TYPE_INVALID, G_TYPE_INVALID) != FALSE)
-    lose ("ThrowError call unexpectedly succeeded!");
-
-  g_print ("ThrowUnregisteredError failed (as expected) returned error: %s\n", error->message);
-  g_clear_error (&error);
-
   g_print ("Calling IncrementRetvalError (for error)\n");
   error = NULL;
   v_UINT32_2 = 0;
@@ -880,30 +889,6 @@ main (int argc, char **argv)
     lose ("(wrapped) ThrowError call unexpectedly succeeded!");
 
   g_print ("(wrapped) ThrowError failed (as expected) returned error: %s\n", error->message);
-  g_clear_error (&error);
-  
-  g_print ("Calling (wrapped) throw_error_multi_word\n");
-  if (org_freedesktop_DBus_GLib_Tests_MyObject_throw_error_multi_word (proxy, &error) != FALSE)
-    lose ("(wrapped) ThrowErrorMultiWord call unexpectedly succeeded!");
-
-  g_print ("(wrapped) ThrowErrorMultiWord failed (as expected) returned error: %s\n", error->message);
-  g_clear_error (&error);
-
-  g_print ("Calling (wrapped) throw_error_under_score\n");
-  if (org_freedesktop_DBus_GLib_Tests_MyObject_throw_error_under_score (proxy, &error) != FALSE)
-    lose ("(wrapped) ThrowErrorUnderScore call unexpectedly succeeded!");
-
-  g_assert_error (error, DBUS_GERROR, DBUS_GERROR_REMOTE_EXCEPTION);
-  g_assert_cmpstr (dbus_g_error_get_name (error), ==,
-      "org.freedesktop.DBus.GLib.Tests.MyObject.Under_score");
-
-  g_print ("(wrapped) ThrowErrorUnderScore failed (as expected) returned error: %s\n", error->message);
-  g_clear_error (&error);
-
-  if (org_freedesktop_DBus_GLib_Tests_MyObject_async_throw_error (proxy, &error) != FALSE)
-    lose ("(wrapped) AsyncThrowError call unexpectedly succeeded!");
-
-  g_print ("(wrapped) AsyncThrowError failed (as expected) returned error: %s\n", error->message);
   g_clear_error (&error);
 
   g_print ("Calling (wrapped) uppercase\n");

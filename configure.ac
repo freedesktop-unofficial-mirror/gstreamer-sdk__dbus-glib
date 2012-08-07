@@ -1,8 +1,8 @@
 dnl -*- mode: m4 -*-
 AC_PREREQ(2.52)
 
-AC_INIT([dbus-glib], [0.98],
-  [https://bugs.freedesktop.org/enter_bug.cgi?product=dbus])
+AC_INIT([dbus-glib], [0.100],
+  [https://bugs.freedesktop.org/enter_bug.cgi?product=dbus&component=GLib])
 
 AC_CANONICAL_HOST
 
@@ -450,6 +450,8 @@ test/interfaces/Makefile
 test/data/valid-service-files/debug-glib.service
 test/data/valid-service-files/debug-echo.service
 test/data/valid-service-files/interfaces-test.service
+test/lib/Makefile
+test/manual/Makefile
 tools/Makefile
 dbus-glib-1.pc
 dbus-glib-1-uninstalled.pc

@@ -1,5 +1,5 @@
-SUBDIRS = . core interfaces
-DIST_SUBDIRS = core interfaces
+SUBDIRS = lib . core interfaces manual
+DIST_SUBDIRS = lib core interfaces manual
 
 INCLUDES = \
 	-I$(top_srcdir)				\

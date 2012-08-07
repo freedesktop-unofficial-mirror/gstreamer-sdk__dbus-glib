@@ -11,7 +11,9 @@ LDADD = \
 	$(DBUS_GLIB_THREADS_LIBS) \
 	$(DBUS_GLIB_LIBS) \
 	$(DBUS_LIBS) \
-	$(top_builddir)/dbus/libdbus-glib-1.la
+	$(top_builddir)/dbus/libdbus-glib-1.la \
+	$(top_builddir)/test/lib/libtest.la \
+	$(NULL)
 
 tool_ldadd = \
 	$(LDADD) \
@@ -48,12 +50,14 @@ endif
 ## build even when not doing "make check"
 noinst_PROGRAMS = \
 	test-dbus-glib \
+	test-error-mapping \
 	test-service-glib \
 	$(THREAD_APPS) \
 	peer-server \
 	peer-client \
 	test-types \
 	test-30574 \
+	test-peer-on-bus \
 	test-proxy-peer \
 	test-registrations \
 	test-variant-recursion \
@@ -83,6 +87,12 @@ test_dbus_glib_SOURCES=				\
 	test-dbus-glib.c
 
 test_dbus_glib_LDADD= $(tool_ldadd)
+
+test_error_mapping_SOURCES = \
+	my-object.c \
+	my-object.h \
+	my-object-marshal.c \
+	error-mapping.c
 
 test_variant_recursion_SOURCES=test-variant-recursion.c
 
@@ -132,6 +142,8 @@ test_types_SOURCES = \
 
 test_gvariant_SOURCES = \
 	test-gvariant.c
+
+test_peer_on_bus_SOURCES = peer-on-bus.c
 
 CLEANFILES = \
 	$(BUILT_SOURCES) \
